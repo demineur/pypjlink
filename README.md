@@ -1,50 +1,60 @@
+# PyPjlink
+
 pypjlink is a python library and command line utility to interoperate with
 projectors through pjlink protocol (http://pjlink.jbmia.or.jp/english/)
 
 It is a fork of the work of Peter Ward (https://bitbucket.org/flowblok/pjlink).
 
-
-Installation
-============
+## Installation
 
 Latest release can be found on pypi and installed with:
-$ pip install
+```bash
+pip install pypjlink
+```
 
+## Usage
 
-Command line usage
-==================
+### Command line
 
 Querying projector status is simple:
-$ pjlink -p 10.1.1.1 power
+```bash
+pjlink -p 10.1.1.1 power
+```
 
 and so it is sending commands:
-$ pjlink -p 10.1.1.1 power off
+```bash
+pjlink -p 10.1.1.1 power off
+```
 
 A password will be requested if configured on the projector.
 
 Please see help or manpage for complete usage options.
 
-
-Python library usage
-====================
+### Python library
 
 The library supports the following python versions:
 * python2.7
 * python3.4
 * python3.5
 
->>> from pypjlink import Projector
->>> projector = Projector.from_address('10.1.1.1')
->>> projector.get_power()
-'off'
->>> projector.set_power('off')
+```python
+from pypjlink import Projector
+projector = Projector.from_address('10.1.1.1')
+# authenticate is required even if there is no password
+projector.authenticate(None)
+print(projector.get_power())
+# off
+projector.set_power('off')
+```
 
+## Test
 
 To run tests, you can use tox to run against every supported python versions
-$ tox
+```bash
+tox
+```
 
 Or you can launch tests in current environment:
-
-$ python -m unittest discover pypjlink.tests
-
-
+```bash
+python -m unittest discover pypjlink.tests
+```
