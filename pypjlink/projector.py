@@ -46,8 +46,9 @@ ERROR_STATES_REV = {
 }
 
 class Projector(object):
-    def __init__(self, f):
+    def __init__(self, f, sock):
         self.f = f
+        self.sock = sock
 
     @classmethod
     def from_address(cls, address, port=4352):
@@ -126,6 +127,11 @@ class Projector(object):
         if not success:
             raise ProjectorError(response)
         assert response == 'OK'
+        
+    def disconnect(self):
+        self.f.close()
+        self.sock.shutdown(socket.SHUT_RDWR)
+        self.sock.close
 
     # Power
 
