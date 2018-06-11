@@ -63,7 +63,7 @@ class Projector(object):
             f = sock.makefile()
         else:
             f = sock.makefile(mode='rw', newline='\r')
-        return cls(f)
+        return cls(f, sock)
 
     def authenticate(self, password=None):
         # I'm just implementing the authentication scheme designed in the
@@ -116,6 +116,11 @@ class Projector(object):
         # but we don't care about the value if we did
         return True
 
+    def disconnect(self):
+        self.f.close()
+        self.sock.shutdown(socket.SHUT_RDWR)
+        self.sock.close()
+    
     def get(self, body):
         success, response = protocol.send_command(self.f, body, '?')
         if not success:
@@ -127,11 +132,6 @@ class Projector(object):
         if not success:
             raise ProjectorError(response)
         assert response == 'OK'
-        
-    def disconnect(self):
-        self.f.close()
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close
 
     # Power
 
